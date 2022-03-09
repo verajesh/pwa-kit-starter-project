@@ -6,17 +6,35 @@
  */
 // const Webpack = require('webpack')
 // const WebpackDevServer = require('webpack-dev-server')
+// const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+// const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 let config = require('pwa-kit-react-sdk/webpack/config')
+let OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 let addSass = false
 
 // const complier = Webpack(config)
 config = config.map((root) => {
     if (root?.module && root?.module?.rules.length && !addSass) {
+        if (root?.plugins && root.mode === 'development') {
+            root.plugins.push(
+                new MiniCssExtractPlugin({
+                    filename: '[name].css'
+                })
+                // new CleanWebpackPlugin()
+            )
+        }
         root.module.rules.push({
             test: /\.scss$/,
             use: [
+                // {
+                //     loader: 'style-loader',
+                //     options: {
+                //         insert: 'body'
+                //     }
+                // }, //4. Inject styles into DOM
                 root.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader, //4. Inject styles into DOM
                 'css-loader', //3. Turns css into commonjs
                 'postcss-loader', //2. Loader to process CSS
@@ -24,6 +42,9 @@ config = config.map((root) => {
             ]
         })
         addSass = true
+        root.optimization = {
+            minimizer: [new OptimizeCssAssetsPlugin(), new HtmlWebpackPlugin()]
+        }
     }
     return root
 })

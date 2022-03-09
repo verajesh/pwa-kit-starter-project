@@ -8,6 +8,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {useIntl, FormattedMessage} from 'react-intl'
+import {Helmet} from 'react-helmet'
 
 // Components
 import {
@@ -34,7 +35,7 @@ import {getAssetUrl} from 'pwa-kit-react-sdk/ssr/universal/utils'
 import {heroFeatures, features} from './data'
 
 // Constants
-import {HOME_SHOP_PRODUCTS_CATEGORY_ID, HOME_SHOP_PRODUCTS_LIMIT} from '../../constants'
+import {HOME_SHOP_PRODUCTS_CATEGORY_ID, HOME_SHOP_PRODUCTS_LIMIT} from '../../constants';
 
 /**
  * This is the home page for Retail React App.
@@ -44,9 +45,11 @@ import {HOME_SHOP_PRODUCTS_CATEGORY_ID, HOME_SHOP_PRODUCTS_LIMIT} from '../../co
  */
 const Home = ({productSearchResult, isLoading}) => {
     const intl = useIntl()
-
     return (
         <Box data-testid="home-page" layerStyle="page">
+            <Helmet>
+                <link href={getAssetUrl('main.css')} rel="stylesheet" />
+            </Helmet>
             <Seo
                 title="Home Page"
                 description="Commerce Cloud Retail React App"
